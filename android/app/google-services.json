@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "561548245279",
+    "project_id": "cash-delivery-98cd6",
+    "storage_bucket": "cash-delivery-98cd6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561548245279:android:344290060e4380ae66982a",
+        "android_client_info": {
+          "package_name": "com.ventis.cashdelivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561548245279-63c5cvf8896l164bc0n47r43eemv83vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrlxKGGYfrG26GfTMSwCfRcplwF-3XPCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561548245279-63c5cvf8896l164bc0n47r43eemv83vd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
