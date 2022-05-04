@@ -43,6 +43,7 @@ dependencies:
   firebase_messaging:
   firebase_core:
   dio: ^4.0.4
+  js:
   unique_identifier:
   flutter_local_notifications:
   workmanager:

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -8,16 +7,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:godelivery_rider/Tabs/NewTabPage.dart';
 import 'package:godelivery_rider/Ui/History.dart';
-import 'package:godelivery_rider/Ui/MyOrders.dart';
-import 'package:godelivery_rider/Ui/OrderDetails.dart';
 import 'package:godelivery_rider/Utils/functions.dart';
 import 'package:godelivery_rider/animation/SlidePageRoute.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/background.dart';
-import 'test.dart';
+
 
 class GetStarted extends StatefulWidget {
   @override
@@ -82,18 +78,19 @@ class _GetStartedState extends State<GetStarted> {
                               children: <Widget>[
                                 MaterialButton(
                                   onPressed: () async {
-                                    final prefs = await SharedPreferences
-                                        .getInstance();
-                                    var id = prefs.getString('agent_id');
+                                    print('je suis ici');
+                                    final prefs = await SharedPreferences.getInstance();
+                                    print('je suis ici1');
+                                    var id = prefs.getInt('agent_id');
+                                    print('je suis ici2');
                                     var queryResponse = await http.post(
-                                      Uri.parse(
-                                          'https://dev-cashdelivery.ventis.group/api/update_status_dispo')
-                                          .replace(queryParameters: {
-                                        'agent_livreur_id': id
-                                      }),
+                                      Uri.parse('https://dev-cashdelivery.ventis.group/api/update_status_dispo'),
                                       headers: <String, String>{
                                         'Content-Type': 'application/json; charset=UTF-8',
                                       },
+                                      body: jsonEncode(<String, int>{
+                                        'id' : id
+                                      }),
 
                                     ).catchError((onError) {
                                       showErrorToast(context,
@@ -132,6 +129,9 @@ class _GetStartedState extends State<GetStarted> {
                                 ),
                                 MaterialButton(
                                   onPressed: () async {
+                                    Navigator.push(context,
+                                        SlidePageRoute(page: NewTabPage()));
+
                                     final prefs = await SharedPreferences
                                         .getInstance();
                                     var id = prefs.getString('agent_id');
