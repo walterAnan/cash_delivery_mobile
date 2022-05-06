@@ -60,7 +60,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     } else {
                       Navigator.pop(context);
                       Navigator.of(context).push(
-                          SlidePageRoute(page: Profile()));
+                        SlidePageRoute(page: Profile()));
                     }
                   },
                 child: Container(

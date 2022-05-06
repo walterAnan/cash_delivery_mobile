@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/background.dart';
+import 'MyOrders.dart';
 
 
 class GetStarted extends StatefulWidget {
@@ -83,31 +84,29 @@ class _GetStartedState extends State<GetStarted> {
                                     print('je suis ici1');
                                     var id = prefs.getInt('agent_id');
                                     print('je suis ici2');
-                                    var queryResponse = await http.post(
+                                    print('je suis id' + id.toString());
+                                    var queryResponse = await http.put(
                                       Uri.parse('https://dev-cashdelivery.ventis.group/api/update_status_dispo'),
                                       headers: <String, String>{
                                         'Content-Type': 'application/json; charset=UTF-8',
                                       },
                                       body: jsonEncode(<String, int>{
-                                        'id' : id
+                                        'agent_id' : id
                                       }),
 
                                     ).catchError((onError) {
                                       showErrorToast(context,
                                           'Vérifiez votre Connexion Internet ');
                                     });
-
-
                                     print('retour API : ' +
                                         '${queryResponse.body}');
+                                    var queryResponseBody = json.decode(queryResponse.body);
                                     EasyLoading.dismiss();
-                                    if (queryResponse != null &&
-                                        queryResponse.statusCode == 200) {
-                                      var queryResponseBody = json.decode(
-                                          queryResponse.body);
-                                      if (queryResponseBody['status'] == 'OK') {
-                                        Navigator.push(context,
-                                            SlidePageRoute(page: NewTabPage()));
+                                    if (queryResponse != null && queryResponse.statusCode == 200) {
+                                      if (queryResponseBody['statut'] == 'OK') {
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) => MyOrders()
+                                        ));
                                       } else {
                                         showErrorToast(context,
                                             '${queryResponseBody['message_content']}');
@@ -129,17 +128,15 @@ class _GetStartedState extends State<GetStarted> {
                                 ),
                                 MaterialButton(
                                   onPressed: () async {
-                                    Navigator.push(context,
-                                        SlidePageRoute(page: NewTabPage()));
+                                    Navigator.push(context, SlidePageRoute(page: History()));
 
-                                    final prefs = await SharedPreferences
-                                        .getInstance();
+                                    final prefs = await SharedPreferences.getInstance();
                                     var id = prefs.getString('agent_id');
                                     var queryResponse = await http.post(
                                       Uri.parse(
-                                          'https://dev-cashdelivery.ventis.group/api/update_status_dispo')
+                                          'https://dev-cashdelivery.ventis.group/api/update_status_indispo')
                                           .replace(queryParameters: {
-                                        'agent_livreur_id': id
+                                        'agent_id': id
                                       }),
                                       headers: <String, String>{
                                         'Content-Type': 'application/json; charset=UTF-8',

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:godelivery_rider/animation/SlidePageRoute.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/functions.dart';
 import 'MyDrawer.dart';
@@ -22,12 +23,13 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
    String orderDeliveredSuccessfully= "Order Delivered Successfully";
    bool bothButtonsInvisible=false;
-   List users = [];
+   var livraison ;
    bool isLoading = false;
 
    @override
   void initState() {
-     initData();
+     super.initState();
+     this.initData();
   }
 
   void initData() async{
@@ -37,35 +39,35 @@ class _HistoryState extends State<History> {
     print('ok' + agentCode);
     var agentId = prefs.getInt('agent_id');
     var id = agentId.toString();
-    var uri = Uri.parse('https://bocashdelivery.ventis.group/api/historique_livraison', ).replace(queryParameters: {'agent_livreur_id': id});
+    var uri = Uri.parse('https://dev-cashdelivery.ventis.group/api/historique_livraison', ).replace(queryParameters: {'agent_livreur_id': id});
     var response = await http.get(uri).catchError((onError){
       showErrorToast(context, 'Vérifiez votre Connexion Internet ');
     });
-    print(response.body);
+
     if(response.statusCode == 200){
       var items = json.decode(response.body)['list_livraison'];
       setState(() {
-        users = items;
+        livraison = items;
+        print('je suis dans historique' + livraison.toString());
         isLoading = false;
       });
     }else{
-      users = [];
       isLoading = false;
-    };
+    }
   }
 
   //Recent Orders Details
   Widget _recentOrderDetails(context){
     return ListView.builder(
         shrinkWrap: true,
-        itemCount: users.length,
+        itemCount: livraison[0].length,
         physics: ClampingScrollPhysics(),
         itemBuilder: (BuildContext ctxt, int index) {
           return new Container(
             padding : EdgeInsets.symmetric(vertical: 5,horizontal: 18),
             child: InkWell(
               onTap: (){
-                Navigator.of(context).push(SlidePageRoute(page: OrderDetails(orderDeliveredSuccessfully: orderDeliveredSuccessfully,)));
+                Navigator.of(context).push(SlidePageRoute(page: OrderDetails(orderDeliveredSuccessfully: orderDeliveredSuccessfully, order: livraison[0])));
               },
               child: Card(
                 elevation: 3,
@@ -83,7 +85,7 @@ class _HistoryState extends State<History> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              child: Text("Order",
+                              child: Text("Livraison",
                                 style: TextStyle(
                                   fontFamily: 'medium',
                                   fontSize: 14,
@@ -126,9 +128,10 @@ class _HistoryState extends State<History> {
                       Container(
                         padding: EdgeInsets.only(top: 6,left: 16,right: 16),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              child: Text("Name: ",
+                              child: Text("Référence",
                                 style: TextStyle(
                                   fontFamily: 'medium',
                                   fontSize: 12,
@@ -137,7 +140,7 @@ class _HistoryState extends State<History> {
                               ),
                             ),
                             Container(
-                              child: Text("John Doe",
+                              child: Text(livraison[0]['ref_operation'],
                                 style: TextStyle(
                                   color: Theme.of(context).textTheme.headline3.color,
                                   fontFamily: 'medium',
@@ -152,9 +155,10 @@ class _HistoryState extends State<History> {
                       Container(
                         padding: EdgeInsets.only(top: 10,left: 16,right: 16),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              child: Text("Delivery Time:",
+                              child: Text("Date",
                                 style: TextStyle(
                                   fontFamily: 'medium',
                                   fontSize: 12,
@@ -163,7 +167,7 @@ class _HistoryState extends State<History> {
                               ),
                             ),
                             Container(
-                              child: Text(" 10 June 3 Pm",
+                              child: Text(DateFormat('dd-MM-yyyy').format(DateTime.parse(livraison[0]['date_livraison'])),
                                 style: TextStyle(
                                   color: Theme.of(context).textTheme.headline3.color,
                                   fontFamily: 'medium',
@@ -175,33 +179,6 @@ class _HistoryState extends State<History> {
                         ),
                       ),
                       //4th Row
-                      Container(
-                        padding: EdgeInsets.only(top: 10,left: 16,right: 16),
-                        child: Row(
-                          children: [
-                            Container(
-                              child: Text("Pickup Location:",
-                                style: TextStyle(
-                                  fontFamily: 'medium',
-                                  fontSize: 12,
-                                  color: Theme.of(context).textTheme.headline1.color,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width*0.5-2,
-                              child: Text(" 781 Eastern Pkwy, Brooklyn Ny ...",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Theme.of(context).textTheme.headline3.color,
-                                  fontFamily: 'medium',
-                                  fontSize: 12,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),

@@ -44,7 +44,6 @@ class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin
                 Container(
                   child: Column(
                     children: [
-                      //AppBar
                       Container(
                         height: 50,
                         child: Stack(
