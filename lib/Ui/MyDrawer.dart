@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Account/Login.dart';
 import 'Documents.dart';
 import 'GetStarted.dart';
-import 'History.dart';
 import 'ManageVehicle.dart';
 import 'MyOrders.dart';
 import 'Profile.dart';
@@ -213,45 +212,45 @@ class _MyDrawerState extends State<MyDrawer> {
                     //Manage Vehicle
                     //Documents
                     //History
-                    InkWell(
-                      onTap: (){
-                        if(title=="History"){
-                          Navigator.pop(context);
-                        }else {
-                          Navigator.pop(context);
-                          Navigator.of(context).push(SlidePageRoute(page: History()));
-                        }
-                      },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      child: Container(
-                        height: 50,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    width: 1,
-                                  color: Theme.of(context).primaryTextTheme.headline3.color,
-                                )
-                            )
-                        ),
-                        child: Row(
-                          children: [
-                            Image.asset("assets/newIcons/ic_history.png",scale: 5,
-                              color: Theme.of(context).iconTheme.color,),
-                            SizedBox(width: 8,),
-                            Container(
-                              child: Text("Historique",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'medium',
-                                  color: Theme.of(context).textTheme.headline1.color,
-                                ),),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: (){
+                    //     if(title=="History"){
+                    //       Navigator.pop(context);
+                    //     }else {
+                    //       Navigator.pop(context);
+                    //       Navigator.of(context).push(SlidePageRoute(page: History()));
+                    //     }
+                    //   },
+                    //   splashColor: Colors.transparent,
+                    //   highlightColor: Colors.transparent,
+                    //   child: Container(
+                    //     height: 50,
+                    //     padding: EdgeInsets.symmetric(horizontal: 20),
+                    //     decoration: BoxDecoration(
+                    //         border: Border(
+                    //             bottom: BorderSide(
+                    //                 width: 1,
+                    //               color: Theme.of(context).primaryTextTheme.headline3.color,
+                    //             )
+                    //         )
+                    //     ),
+                    //     child: Row(
+                    //       children: [
+                    //         Image.asset("assets/newIcons/ic_history.png",scale: 5,
+                    //           color: Theme.of(context).iconTheme.color,),
+                    //         SizedBox(width: 8,),
+                    //         Container(
+                    //           child: Text("Historique",
+                    //             style: TextStyle(
+                    //                 fontSize: 14,
+                    //                 fontFamily: 'medium',
+                    //               color: Theme.of(context).textTheme.headline1.color,
+                    //             ),),
+                    //         )
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     //Setting
                     InkWell(
                       onTap: (){

@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:godelivery_rider/Tabs/DeliveredTabPage.dart';
 import 'package:godelivery_rider/Ui/OrderDetails.dart';
 import 'package:godelivery_rider/Ui/opt1.dart';
-import 'package:godelivery_rider/Ui/otp.dart';
 import 'package:godelivery_rider/animation/SlidePageRoute.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -89,194 +88,7 @@ class  _ProcessingTabPageState extends State<ProcessingTabPage> {
     var montant = item['montant_livraison'];
     var adresse = item['adresse_livraison'];
 
-    // return Card(
-    //   elevation: 5,
-    //   shape: RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.circular(5)),
-    //   child: Container(
-    //       padding: const EdgeInsets.all(10.0),
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: <Widget>[
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text("Livraison" + '  '+'#'+ reference,
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(date,
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text('Montant',
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(montant + ' XAF',
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text('Bénéficiaire',
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(nomBenef,
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text('Adresse',
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(adresse,
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 10),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 MaterialButton(
-    //                   onPressed: () async {
-    //                     Navigator.of(context).push(SlidePageRoute(page: Opt1(order: item,)));
-    //
-    //
-    //                   },
-    //                   height: 25,
-    //                   elevation: 0,
-    //                   highlightElevation: 0,
-    //                   splashColor: Colors.transparent,
-    //                   highlightColor: Colors.transparent,
-    //                   shape: RoundedRectangleBorder(
-    //                       borderRadius: BorderRadius.circular(50)
-    //                   ),
-    //                   color: Theme.of(context).accentTextTheme.headline2.color,
-    //                   child: Container(
-    //                     child: Text("Terminer la Livraison",
-    //                       style: TextStyle(
-    //                           color: Theme.of(context).accentTextTheme.bodyText2.color,
-    //                           fontSize: 12,
-    //                           fontFamily: 'medium'
-    //                       ),),
-    //                   ),
-    //                 ),
-    //
-    //                 ButtonTheme(
-    //                   height: 25,
-    //                   child: MaterialButton(
-    //                     onPressed: (){
-    //                       Navigator.of(context).push(SlidePageRoute(page: OrderDetails(bothButtonsinvisible: bothButtonsInvisible, order: item,)));
-    //                     },
-    //                     highlightElevation: 0,
-    //                     shape: RoundedRectangleBorder(
-    //                       borderRadius: BorderRadius.circular(50),
-    //                       side:BorderSide(color:Theme.of(context).textTheme.headline1.color),
-    //                     ),
-    //                     child: Container(
-    //                       child: Text("Détails",
-    //                         style: TextStyle(
-    //                             fontSize: 12,
-    //                             fontFamily: 'medium'
-    //                         ),),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //           )
-    //
-    //
-    //
-    //         ],
-    //       )
-    //
-    //   ),
-    // );
-
-    var fontSize = 14.0;
+    var fontSize = 12.0;
     return Card(
       elevation: 8.0,
       shadowColor: Colors.grey.withOpacity(0.5),
@@ -348,7 +160,7 @@ class  _ProcessingTabPageState extends State<ProcessingTabPage> {
                     ),
                   ),
                   Text(
-                    montant,
+                    NumberFormat.currency(locale: 'EUR', symbol: 'XAF').format(double.parse(montant)),
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: fontSize,
@@ -385,6 +197,7 @@ class  _ProcessingTabPageState extends State<ProcessingTabPage> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Text(
                     'Adresse',
@@ -393,11 +206,38 @@ class  _ProcessingTabPageState extends State<ProcessingTabPage> {
                       fontSize: fontSize,
                     ),
                   ),
-                  Text(
-                    adresse,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: fontSize,
+
+                  SizedBox(width: 20,),
+
+                  // Container(
+                  //   // color: Colors.blue,
+                  //   width: MediaQuery.of(context).size.width * 0.6,
+                  //   child: Flexible(
+                  //     // color: Colors.blue,
+                  //     child: Text(
+                  //       adresse,
+                  //       style: TextStyle(
+                  //         color: Colors.black54,
+                  //         fontSize: fontSize,
+                  //       ),
+                  //       maxLines: 5,
+                  //       overflow: TextOverflow.ellipsis,
+                  //     ),
+                  //   ),
+                  // )
+
+                  Container(
+                    // color: Colors.blue,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: FittedBox(
+                      child: Text(
+                        adresse,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: fontSize,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   )
                 ],

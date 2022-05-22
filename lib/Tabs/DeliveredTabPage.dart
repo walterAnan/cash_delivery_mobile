@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:godelivery_rider/Ui/OrderDetails.dart';
 import 'package:godelivery_rider/animation/SlidePageRoute.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -60,6 +61,12 @@ class _DeliveredTabPageState extends State<DeliveredTabPage> {
     if(users.contains(null) || users.length < 0 || isLoading){
       return Center(child: CircularProgressIndicator());
     }
+
+    if(users.length==0){
+      return Center(
+        child: Text('Aucune Livraison Effectuée !!!', style: TextStyle(fontSize: 14),),
+      );
+    }
     return ListView.builder(
         itemCount: users.length,
         itemBuilder: (context,index){
@@ -74,161 +81,6 @@ class _DeliveredTabPageState extends State<DeliveredTabPage> {
     var adresse = item['adresse_livraison'];
     var montant = item['montant_livraison'];
 
-    // return Card(
-    //   elevation: 5,
-    //   shape: RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.circular(5)),
-    //   child: Container(
-    //       padding: const EdgeInsets.all(10.0),
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: <Widget>[
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text("Livraison" + '  '+'#'+ reference,
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(date,
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text('Montant',
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(montant + 'XAF',
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text('Bénéficiaire',
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(nomBenef,
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Container(
-    //                   child: Text('Adresse',
-    //                     style: TextStyle(
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                       color: Theme.of(context).textTheme.headline1.color,
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 Container(
-    //                   child: Text(adresse,
-    //                     style: TextStyle(
-    //                       color: Theme.of(context).textTheme.headline3.color,
-    //                       fontFamily: 'medium',
-    //                       fontSize: 14,
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //
-    //
-    //
-    //
-    //           Container(
-    //             padding: EdgeInsets.only(top: 10),
-    //             child: TextButton(
-    //                 onPressed: () {},
-    //                 child: ButtonTheme(
-    //                   height: 25,
-    //                   child: MaterialButton(
-    //                     onPressed: (){
-    //                        Navigator.of(context).push(SlidePageRoute(page: OrderDetails(bothButtonsinvisible: bothButtonsInvisible, order: item,)));
-    //                     },
-    //                     child: Container(
-    //                       child: Text("Voir les Details",
-    //                         style: TextStyle(
-    //                           color: Colors.green,
-    //                             fontSize: 22,
-    //                             fontFamily: 'medium'
-    //                         ),),
-    //                     ),
-    //                   ),
-    //                 ),
-    //             ),
-    //           )
-    //
-    //
-    //
-    //         ],
-    //       )
-    //
-    //   ),
-    // );
 
     var fontSize = 14.0;
     return Card(
@@ -278,13 +130,24 @@ class _DeliveredTabPageState extends State<DeliveredTabPage> {
                       fontSize: fontSize,
                     ),
                   ),
-                  Text(
-                    date,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: fontSize,
+
+
+                  Container(
+                    child: Text(DateFormat('dd-MM-yyyy').format(DateTime.parse(date)),
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline3.color,
+                        fontFamily: 'medium',
+                        fontSize: 12,
+                      ),
                     ),
-                  )
+                  ),
+                  // Text(
+                  //   date,
+                  //   style: TextStyle(
+                  //     color: Colors.black54,
+                  //     fontSize: fontSize,
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -302,7 +165,7 @@ class _DeliveredTabPageState extends State<DeliveredTabPage> {
                     ),
                   ),
                   Text(
-                    montant,
+                    NumberFormat.currency(locale: 'EUR', symbol: 'XAF').format(double.parse(montant)),
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: fontSize,
@@ -347,11 +210,18 @@ class _DeliveredTabPageState extends State<DeliveredTabPage> {
                       fontSize: fontSize,
                     ),
                   ),
-                  Text(
-                    adresse,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: fontSize,
+                  Container(
+                    // color: Colors.blue,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: FittedBox(
+                      child: Text(
+                        adresse,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: fontSize,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   )
                 ],

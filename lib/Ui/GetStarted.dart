@@ -5,10 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:godelivery_rider/Tabs/NewTabPage.dart';
-import 'package:godelivery_rider/Ui/History.dart';
 import 'package:godelivery_rider/Utils/functions.dart';
-import 'package:godelivery_rider/animation/SlidePageRoute.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,9 +21,10 @@ class GetStarted extends StatefulWidget {
 class _GetStartedState extends State<GetStarted> {
   var hauteur;
   var largeur;
+  bool isLoading = false;
 
   void initState() {
-    EasyLoading.init();
+    isLoading = true;
   }
 
   @override
@@ -79,12 +77,8 @@ class _GetStartedState extends State<GetStarted> {
                               children: <Widget>[
                                 MaterialButton(
                                   onPressed: () async {
-                                    print('je suis ici');
                                     final prefs = await SharedPreferences.getInstance();
-                                    print('je suis ici1');
                                     var id = prefs.getInt('agent_id');
-                                    print('je suis ici2');
-                                    print('je suis id' + id.toString());
                                     var queryResponse = await http.put(
                                       Uri.parse('https://dev-cashdelivery.ventis.group/api/update_status_dispo'),
                                       headers: <String, String>{
@@ -128,43 +122,37 @@ class _GetStartedState extends State<GetStarted> {
                                 ),
                                 MaterialButton(
                                   onPressed: () async {
-                                    Navigator.push(context, SlidePageRoute(page: History()));
-
                                     final prefs = await SharedPreferences.getInstance();
-                                    var id = prefs.getString('agent_id');
-                                    var queryResponse = await http.post(
+                                    var id = prefs.getInt('agent_id');
+                                    var queryResponse = await http.put(
                                       Uri.parse(
-                                          'https://dev-cashdelivery.ventis.group/api/update_status_indispo')
-                                          .replace(queryParameters: {
-                                        'agent_id': id
-                                      }),
+                                          'https://dev-cashdelivery.ventis.group/api/update_status_indispo'),
                                       headers: <String, String>{
                                         'Content-Type': 'application/json; charset=UTF-8',
                                       },
+                                      body: jsonEncode(<String, int>{
+                                        'agent_id' : id
+                                      }),
 
-                                    ).catchError((onError) {
-                                      showErrorToast(context,
-                                          'Vérifiez votre Connexion Internet ');
+                                    ).catchError((onError) {showErrorToast(context, 'Vérifiez votre Connexion Internet ');
                                     });
 
 
-                                    print('retour API : ' +
-                                        '${queryResponse.body}');
+                                    print('retour API : ' + '${queryResponse.body}');
                                     EasyLoading.dismiss();
-                                    if (queryResponse != null &&
-                                        queryResponse.statusCode == 200) {
-                                      var queryResponseBody = json.decode(
-                                          queryResponse.body);
-                                      if (queryResponseBody['status'] == 'OK') {
-                                        Navigator.push(context,
-                                            SlidePageRoute(page: History()));
+                                    if (queryResponse != null && queryResponse.statusCode == 200) {
+                                      var queryResponseBody = json.decode(queryResponse.body);
+                                      if (queryResponseBody['statut'] == 'OK') {
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) => MyOrders()
+                                    ));
                                       } else {
-                                        showErrorToast(context,
-                                            '${queryResponseBody['message_content']}');
+                                        showErrorToast(context, '${queryResponseBody['statut']}');
                                       }
                                     } else {
-                                      showErrorToast(context,
-                                          'Verifiez votre connexion internet');
+
+                                    showErrorToast(context, 'Vérifiez votre Connexion Internet ');
+
                                     }
                                   },
                                   padding: EdgeInsets.symmetric(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:godelivery_rider/Tabs/DeliveredTabPage.dart';
 import 'package:godelivery_rider/Utils/functions.dart';
@@ -146,7 +147,14 @@ class _Opt1State extends State<Opt1> {
                   print('Identifiant agent : ' + '$agentId');
                   initData();
                 }else{
-                  showErrorToast(context, 'Code Livraison Invalide');
+                  CoolAlert.show(
+                    context: context,
+                    type: CoolAlertType.error,
+                    confirmBtnColor: Colors.green,
+                    title: 'Oops...',
+                    text: 'Le code est erroné',
+                    loopAnimation: true,
+                  );
                   print('Erreur');
                 }
                 setState(() {
@@ -186,12 +194,17 @@ class _Opt1State extends State<Opt1> {
     print(queryResponse.statusCode);
     print(queryResponse.body);
 
-
     if(queryResponse.statusCode == 200){
       setState(() {
         print('je suis à nouveau ici ');
-        showSuccessToast(context, 'Code Livraison Valide');
-        Navigator.of(context).push(SlidePageRoute(page: DeliveredTabPage()));
+        CoolAlert.show(
+          context: context,
+          type: CoolAlertType.success,
+          confirmBtnColor: Colors.green,
+          text: 'Code valide \n Transaction Effectuée avec succès !!!',
+          autoCloseDuration: Duration(seconds: 10),
+        );
+        // Navigator.of(context).push(SlidePageRoute(page: DeliveredTabPage()));
 
       });
     } else {

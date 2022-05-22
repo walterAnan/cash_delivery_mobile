@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:godelivery_rider/Ui/GetStarted.dart';
+import 'package:godelivery_rider/Ui/TelVerifieErrorPage.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:serial_number/serial_number.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
+import 'package:unique_identifier/unique_identifier.dart';
+import 'package:imei_plugin/imei_plugin.dart';
 import 'Theme/DarkThemeProvider.dart';
 import 'Theme/ThemeStyle.dart';
 import 'Ui/AddSignature.dart';
 import 'Account/ChangeEmail.dart';
 import 'Account/ChangeNumber.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'Account/ChangePassword.dart';
 import 'Ui/Chat.dart';
 import 'Ui/CheckInternet.dart';
 import 'Ui/Documents.dart';
-import 'Ui/History.dart';
 import 'Ui/Location.dart';
 import 'Account/Login.dart';
 import 'Ui/ManageVehicle.dart';
@@ -33,6 +37,8 @@ import 'Ui/WebViewScreen.dart';
 import 'Ui/UploadDocuments.dart';
 import 'Account/OTPScreen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:advertising_id/advertising_id.dart';
+
 
 
 const  MaterialColor myColor = const MaterialColor(
@@ -66,50 +72,76 @@ void showNotification( v, flp) async {
 }
 
 
-Future main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  // await Workmanager().initialize(callbackDispatcher, isInDebugMode: true); //to true if still in testing lev turn it to false whenever you are launching the app
-  // String simplePeriodicTask;
-  // await Workmanager().registerPeriodicTask("5", simplePeriodicTask,
-  //     existingWorkPolicy: ExistingWorkPolicy.replace,
-  //     frequency: Duration(minutes: 15),//when should it check the link
-  //     initialDelay: Duration(seconds: 5),//duration before showing the notification
-  //     constraints: Constraints(
-  //       networkType: NetworkType.connected,
-  //     ));
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  tel = sharedPreferences.get('tel');
-  await Firebase.initializeApp();
-  runApp(MyApp());
+
+void imeiIdentif() async {
+
+  String  identifier =await UniqueIdentifier.serial;
+  String serialNumber = await SerialNumber.serialNumber;
+   String platformImei = await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
+  String deviceId = await PlatformDeviceId.getDeviceId;
+  List<String> multiImei = await ImeiPlugin.getImeiMulti();
+  String advertisingId = await AdvertisingId.id(true);
+  print('imeiii1' + multiImei.toString());
+  print(' im'+ platformImei);
+  print('numero de serie: ' + identifier);
+  print('numero de serie: ' + serialNumber);
+  print('plateDeviceInfo' + deviceId);
+  print('advi ' + advertisingId);
+
+
+  print('je suis imei' + multiImei.toString());
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  var imei1 = androidInfo.toMap()['display'];
+
+
+
+
+  var queryResponse = await http.post(Uri.parse('https://dev-cashdelivery.ventis.group/api/apareil_auth'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'imei1': imei1,
+      'imei2': '',
+    }),
+  ).catchError((onError){
+    // showErrorToast(this.context, 'Vérifiez votre Connexion Internet ');
+  });
+
+  if(queryResponse!=null && queryResponse.statusCode==200) {
+
+    var queryResponseBody = json.decode(queryResponse.body);
+    print(queryResponseBody);
+    if (queryResponseBody['status'] == 'OK') {
+
+      runApp(MyApp());
+    }
+    else {
+
+
+          SystemNavigator.pop();
+
+    }
+  }else{
+    SystemNavigator.pop();
+  }
+
+
+
 }
 
 
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
 
-// void callbackDispatcher() {
-//   Workmanager().executeTask((taskName, inputData) async {
-//
-//     FlutterLocalNotificationsPlugin flp = FlutterLocalNotificationsPlugin();
-//     var android = AndroidInitializationSettings('@mipmap/ic_launcher');
-//     var iOS = IOSInitializationSettings();
-//     var initSetttings = InitializationSettings(android: android, iOS: iOS);
-//     flp.initialize(initSetttings);
-//
-//
-//     var response= await http.post(Uri.parse('https://dev-cashdelivery.ventis.group/api/liste_livraison'));
-//     print("here================");
-//     print(response);
-//     var convert = json.decode(response.body);
-//     if (convert['status']  == true) {
-//       showNotification(convert['msg'], flp,);
-//     } else {
-//       print("no messgae");
-//     }
-//
-//     return Future.value(true);
-//   });
-// }
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  tel = sharedPreferences.get('tel');
+  await Firebase.initializeApp();
+   // runApp(MyApp());
+   imeiIdentif();
+}
 
-// This app is a stateful, it tracks the user's current choice.
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -163,6 +195,7 @@ class _MyAppState extends State<MyApp> {
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
             routes: <String, WidgetBuilder>{
               '/Login':    (BuildContext context)=>Login(),
+              '/TelVerifieErrorPage':    (BuildContext context)=>TelVerifieErrorPage(),
               '/CheckInternet':    (BuildContext context)=>NoInternetScreen(),
               '/Location':    (BuildContext context)=>Location(),
               '/MyOrders':   (BuildContext context)=>MyOrders(),
@@ -179,7 +212,7 @@ class _MyAppState extends State<MyApp> {
               '/Documents':    (BuildContext context)=>Documents(),
               '/RequiredDocuments':    (BuildContext context)=>RequiredDocuments(),
               '/UploadDocuments':    (BuildContext context)=>UploadDocuments(),
-              '/History':    (BuildContext context)=>History(),
+              // '/History':    (BuildContext context)=>History(),
               '/Setting':    (BuildContext context)=>Setting(),
               '/ChangePassword':    (BuildContext context)=>ChangePassword(),
               '/WebViewScreen':    (BuildContext context)=>WebViewScreen(),

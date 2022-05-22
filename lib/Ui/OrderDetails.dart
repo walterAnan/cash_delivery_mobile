@@ -1,10 +1,6 @@
 
-import 'package:flutter/services.dart';
-import 'package:godelivery_rider/Ui/AddSignature.dart';
-import 'package:godelivery_rider/animation/SlidePageRoute.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'Chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -188,13 +184,23 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   fontSize: fontSize,
                                 ),
                               ),
-                              Text(
-                                this.order['date_livraison'].toString(),
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: fontSize,
+
+                              Container(
+                                child: Text(DateFormat('dd-MM-yyyy').format(DateTime.parse(this.order['date_livraison'])),
+                                  style: TextStyle(
+                                    color: Theme.of(context).textTheme.headline3.color,
+                                    fontFamily: 'medium',
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              )
+                              ),
+                              // Text(
+                              //   this.order['date_livraison'].toString(),
+                              //   style: TextStyle(
+                              //     color: Colors.black54,
+                              //     fontSize: fontSize,
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
@@ -254,11 +260,19 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   fontSize: fontSize,
                                 ),
                               ),
-                              Text(
-                                this.order['adresse_livraison'],
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: fontSize,
+
+                              Container(
+                                // color: Colors.blue,
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: FittedBox(
+                                  child: Text(
+                                    this.order['adresse_livraison'],
+                                    style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: fontSize,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               )
                             ],
@@ -447,7 +461,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 ),
                               ),
                               Text(
-                                this.order['montant_livraison'].toString(),
+                                NumberFormat.currency(locale: 'EUR', symbol: 'XAF').format(double.parse(this.order['montant_livraison'])),
                                 style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: fontSize,
